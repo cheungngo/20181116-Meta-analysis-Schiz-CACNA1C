@@ -1,4 +1,4 @@
-DB00622,Nicardipine,"approved, investigational",yes,inhibitor
+DBID,Name,Status,Known_action,Mechanism
 DB01388,Mibefradil,"investigational, withdrawn",yes,inhibitor
 DB00270,Isradipine,"approved, investigational",yes,inhibitor
 DB00661,Verapamil,approved,yes,inhibitor
