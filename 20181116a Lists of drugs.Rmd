@@ -40,6 +40,10 @@ dim(post)
 head(post)
 ```
 
+```{r}
+colnames(post) = c('DBID','Name','Status','Known_action', 'Mechanism')
+```
+
 ```{r, message=FALSE}
 library(readr)
 ```
