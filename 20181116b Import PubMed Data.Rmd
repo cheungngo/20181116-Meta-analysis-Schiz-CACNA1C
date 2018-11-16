@@ -1,0 +1,133 @@
+---
+title: "20181116b Import PubMed Data"
+author: "cheungngo"
+date: "November 16, 2018"
+output: word_document
+---
+
+### Load the drugs first
+
+```{r}
+library(readr)
+L_type_calcium_channel_combined_post <- read_csv("L-type calcium channel combined post.csv")
+drugs = L_type_calcium_channel_combined_post
+head(drugs)
+```
+
+### Storing the name of the drugs to a vector
+
+```{r}
+name = as.vector(sapply(drugs$Name, as.character))
+name
+```
+
+### Loading the RISmed
+
+```{r, message=FALSE}
+library(RISmed)
+```
+
+### Setting (and revising) the query
+
+```{r, message=FALSE}
+library(tidyverse)
+```
+
+```{r}
+drug_string = ''; i=0
+for (i in 1:length(name)) {
+  if (i<length(name)) {
+    drug_string = str_c(drug_string, name[i], ' OR ')
+  } else {
+    drug_string = str_c(drug_string, name[i])
+  }
+}
+drug_string = str_c('(',drug_string,')')
+drug_string
+```
+
+```{r}
+query = str_c(drug_string,' AND ','Schizophrenia')
+query
+```
+
+```{r}
+fit = EUtilsSummary(query,db='pubmed')
+sink('fit.txt')
+fit
+sink()
+fit
+```
+
+
+### Extracting the data
+
+```{r}
+fetch = EUtilsGet(fit)
+fetch
+```
+
+
+### Before accessing the medline object
+
+```{r}
+getSlots('Medline')
+```
+
+
+### Accessing the medline object
+
+Author(), YearPubmed(), PMID(), AbstractText()
+
+```{r}
+auth_fetch = Author(fetch)
+LastFirst = sapply(auth_fetch, function(x) paste(x$LastName[1],x$ForeName[1]))
+LastFirst
+```
+
+```{r}
+year_fetch = YearPubmed(fetch)
+table(year_fetch)
+```
+
+```{r}
+abs_fetch = AbstractText(fetch)
+```
+
+```{r}
+PMID_fetch = PMID(fetch)
+```
+
+```{r}
+journal_fetch = Title(fetch)
+```
+
+```{r}
+Art_ti_fetch = ArticleTitle(fetch)
+Art_ti_fetch[1]
+```
+
+
+### Summarizing in a table
+
+```{r}
+sum_fetch_brief = data.frame(Title = Art_ti_fetch, 
+                             Journal = journal_fetch, 
+                             Year = year_fetch, 
+                             PMID = PMID_fetch)
+sum_fetch_brief_l = list(sum_fetch_brief)
+write.table(sum_fetch_brief_l, 'sum_fetch_brief.txt', sep="\t")
+write_csv(sum_fetch_brief, 'sum_fetch_brief.csv')
+```
+
+```{r}
+sum_fetch = data.frame(Title = Art_ti_fetch, 
+                       Journal = journal_fetch, 
+                       Year = year_fetch, 
+                       PMID = PMID_fetch, 
+                       Abstract = abs_fetch)
+write_csv(sum_fetch, 'sum_fetch.csv')
+sum_fetch_l = list(sum_fetch)
+write.table(sum_fetch_l, 'sum_fetch.txt', sep = '\t')
+```
+
