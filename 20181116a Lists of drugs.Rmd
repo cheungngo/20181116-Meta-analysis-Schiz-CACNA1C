@@ -1,0 +1,45 @@
+---
+title: "20181116a Lists of drugs"
+author: "cheungngo"
+date: "16 November 2018"
+output: word_document
+---
+
+### Getting the lists of 'L-type Calcium channel antagonists'
+
+From the paper: 'Targeting the schizophrenia genome: a fast track strategy from GWAS to clinic', the gene of interest would be CACNA1C and CACNB2 (grouped together as they encode component subunits of the same channel)  
+
+CACNA1C: Voltage-dependent L-type calcium channel subunit alpha-1C  
+CACNB2: Voltage-dependent L-type calcium channel subunit beta-2  
+
+We extracted the data table from the drug bank. 
+
+For CACNA1C:  
+There are 25 entries in total  
+8 removed because of unknown / no pharmacological actions  
+'Ibutilide' removed as it is known to be an activator  
+'Calcium' removed as it is known to be a ligand  
+15 drugs left  
+
+For CACNB2:  
+There are 13 entries in total  
+2 removed because of unknown / no pharmacological actions  
+11 drugs left  
+
+### Combining the two tables (for overlaps)  
+
+```{r}
+library(readxl)
+L_type_calcium_channel_combined_pre <- read_excel("L-type calcium channel combined pre.xlsx")
+pre = L_type_calcium_channel_combined_pre
+```
+
+```{r}
+post = unique(pre)
+dim(post)
+head(post)
+```
+
+```{r}
+write_csv(post, 'L-type calcium channel combined post.csv')
+```
