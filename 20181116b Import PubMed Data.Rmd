@@ -47,7 +47,9 @@ drug_string
 ```
 
 ```{r}
-query = str_c(drug_string,' AND ','Schizophrenia')
+CCB = '(calcium channel blocker OR calcium channel inhibitor OR calcium channel antagonist)'
+RCT = '(randomized controlled trial OR RCT)'
+query = str_c('(',drug_string,' OR ',CCB,')',' AND ',RCT,' AND ','Schizophrenia')
 query
 ```
 
@@ -82,7 +84,7 @@ Author(), YearPubmed(), PMID(), AbstractText()
 ```{r}
 auth_fetch = Author(fetch)
 LastFirst = sapply(auth_fetch, function(x) paste(x$LastName[1],x$ForeName[1]))
-LastFirst
+head(LastFirst)
 ```
 
 ```{r}
